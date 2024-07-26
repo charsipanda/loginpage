@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useRef } from 'react';
+import './index.css';
+import LoginForm from './Components/Loginform/LoginForm';
+import horsie from './Components/Assets/horsie.mov';
 
 function App() {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const videoElement = videoRef.current;
+
+    if (videoElement) {
+      videoElement.playbackRate = 0.5; 
+
+      videoElement.addEventListener('ended', () => {
+        videoElement.classList.add('fade-out');
+      });
+    }
+
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener('ended', () => {
+          videoElement.classList.add('fade-out');
+        });
+      }
+    };
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="login-page">
+      <video ref={videoRef} autoPlay muted loop id="background-video">
+        <source src={horsie} type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <LoginForm />
     </div>
   );
 }
